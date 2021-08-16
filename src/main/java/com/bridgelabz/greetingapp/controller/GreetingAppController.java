@@ -1,7 +1,9 @@
-/*
-  UC-2: Added Services Layer to get Simple Greeting message ”Hello World”.
+/* UC-3:Ability for the Greeting App to give Greeting message with
+ * 1. User First Name and Last Name
+ * 2. With just First Name or Last Name based on User attributes provided
+ * 3. Just Hello World.
 
-  @author DIVYA MUNDHADA
+ * @author DIVYA MUNDHADA
  * @since 16.08.2021
  */
 
@@ -25,9 +27,16 @@ public class GreetingAppController {
     private GreetingAppService greetingAppService;
 
     @GetMapping("/getMessage")
-    public ResponseEntity<String> getMessage(){
+    public ResponseEntity<String> getMessage() {
         return new ResponseEntity<>(greetingAppService.getMessage(), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/getGreetingMessage")
+    public ResponseEntity<String> greeting(@RequestParam(value = "firstName", defaultValue = "World") String firstName,
+                                           @RequestParam(value = "lastName", defaultValue = "") String lastName) {
+        return new ResponseEntity<>(greetingAppService.getGreeting(firstName, lastName), HttpStatus.OK);
+    }
+
     @GetMapping("/getGreeting")
     public GreetingDTO greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         return new GreetingDTO(counter.incrementAndGet(), String.format(template, name));
@@ -42,4 +51,5 @@ public class GreetingAppController {
     public GreetingDTO sayHello(@PathVariable int counter, @RequestParam(value = "content") String contentName) {
         return new GreetingDTO(counter, String.format(template, contentName));
     }
+
 }
