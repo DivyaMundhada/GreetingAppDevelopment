@@ -1,13 +1,17 @@
-/**
- * UC-1: Using GreetingController return JSON for different HTTP Methods.
- *
- * @author DIVYA MUNDHADA
+/*
+  UC-2: Added Services Layer to get Simple Greeting message ”Hello World”.
+
+  @author DIVYA MUNDHADA
  * @since 16.08.2021
  */
 
 package com.bridgelabz.greetingapp.controller;
 
 import com.bridgelabz.greetingapp.dto.GreetingDTO;
+import com.bridgelabz.greetingapp.services.GreetingAppService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,6 +21,13 @@ public class GreetingAppController {
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
+    @Autowired
+    private GreetingAppService greetingAppService;
+
+    @GetMapping("/getMessage")
+    public ResponseEntity<String> getMessage(){
+        return new ResponseEntity<>(greetingAppService.getMessage(), HttpStatus.OK);
+    }
     @GetMapping("/getGreeting")
     public GreetingDTO greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         return new GreetingDTO(counter.incrementAndGet(), String.format(template, name));
